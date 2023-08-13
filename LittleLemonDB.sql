@@ -84,14 +84,33 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `LittleLemonDB`.`MenuItems`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`MenuItems` (
+  `MenuItemsID` INT NOT NULL,
+  `CourseName` VARCHAR(255) NOT NULL,
+  `StarterName` VARCHAR(255) NOT NULL,
+  `DessertName` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`MenuItemsID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `LittleLemonDB`.`Menu`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Menu` (
   `MenuID` INT NOT NULL,
-  `Category` VARCHAR(255) NOT NULL,
-  `Price` DECIMAL NOT NULL,
   `Cuisine` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`MenuID`))
+  `MenuItemsID` INT NOT NULL,
+  `MenuName` VARCHAR(45) NOT NULL,
+  `Cost` DECIMAL NOT NULL,
+  PRIMARY KEY (`MenuID`),
+  INDEX `MenuItemsID_idx` (`MenuItemsID` ASC) VISIBLE,
+  CONSTRAINT `MenuItemsID`
+    FOREIGN KEY (`MenuItemsID`)
+    REFERENCES `LittleLemonDB`.`MenuItems` (`MenuItemsID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -99,20 +118,21 @@ ENGINE = InnoDB;
 -- Table `LittleLemonDB`.`OrderDeliveryStatus`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`OrderDeliveryStatus` (
-  `OrderID` INT NOT NULL,
   `MenuID` INT NOT NULL,
   `Delivery Status` VARCHAR(255) NOT NULL,
   `Quantity` INT NOT NULL,
-  PRIMARY KEY (`OrderID`, `MenuID`),
+  `OrderID` INT NOT NULL,
+  PRIMARY KEY (`MenuID`, `OrderID`),
   INDEX `MenuID_idx` (`MenuID` ASC) VISIBLE,
-  CONSTRAINT `OrderID`
-    FOREIGN KEY (`OrderID`)
-    REFERENCES `LittleLemonDB`.`Orders` (`OrderID`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+  INDEX `OrderID_idx` (`OrderID` ASC) VISIBLE,
   CONSTRAINT `MenuID`
     FOREIGN KEY (`MenuID`)
     REFERENCES `LittleLemonDB`.`Menu` (`MenuID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `OrderID`
+    FOREIGN KEY (`OrderID`)
+    REFERENCES `LittleLemonDB`.`Orders` (`OrderID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
