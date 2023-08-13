@@ -91,6 +91,8 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`MenuItems` (
   `CourseName` VARCHAR(255) NOT NULL,
   `StarterName` VARCHAR(255) NOT NULL,
   `DessertName` VARCHAR(255) NOT NULL,
+  `DrinkName` VARCHAR(255) NOT NULL,
+  `SideName` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`MenuItemsID`))
 ENGINE = InnoDB;
 
@@ -119,9 +121,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`OrderDeliveryStatus` (
   `MenuID` INT NOT NULL,
-  `Delivery Status` VARCHAR(255) NOT NULL,
+  `DeliveryStatus` VARCHAR(255) NOT NULL,
   `Quantity` INT NOT NULL,
   `OrderID` INT NOT NULL,
+  `DeliveryDate` DATE NOT NULL,
   PRIMARY KEY (`MenuID`, `OrderID`),
   INDEX `MenuID_idx` (`MenuID` ASC) VISIBLE,
   INDEX `OrderID_idx` (`OrderID` ASC) VISIBLE,
