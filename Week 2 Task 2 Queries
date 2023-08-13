@@ -1,0 +1,37 @@
+DELIMITER //
+
+CREATE PROCEDURE GetMaxQuantity()
+BEGIN
+SELECT SUM(OrderDeliveryStatus.Quantity) AS "Max Quantity in Order" from OrderDeliveryStatus GROUP BY OrderDeliveryStatus.OrderID ORDER BY SUM(OrderDeliveryStatus.Quantity) DESC LIMIT 1;
+END //
+
+DELIMITER ;
+
+CALL GetMaxQuantity();
+
+--note modified to 7 as nothing for 1 based on data
+
+PREPARE GetOrderDetail FROM 'SELECT Orders.OrderID, SUM(OrderDeliveryStatus.Quantity) AS Quantity, SUM(Menu.Cost) AS Cost
+FROM Bookings INNER JOIN Orders ON Bookings.BookingID = Orders.BookingID 
+	INNER JOIN OrderDeliveryStatus ON Orders.OrderID = OrderDeliveryStatus.OrderID
+	INNER JOIN Menu ON OrderDeliveryStatus.MenuID = Menu.MenuID
+	WHERE Bookings.CustomerID = ?
+	GROUP BY Orders.OrderID';
+
+SET @id = 7;
+EXECUTE GetOrderDetail USING @id;
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE CancelOrder(IN cancelID INT)
+BEGIN
+DELETE FROM Orders WHERE Orders.OrderID = cancelID;
+SELECT CONCAT('Order ',cancelID, ' is cancelled');
+END //
+
+DELIMITER ;
+
+CALL CancelOrder(5);
