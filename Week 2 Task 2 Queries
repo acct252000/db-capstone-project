@@ -21,15 +21,12 @@ FROM Bookings INNER JOIN Orders ON Bookings.BookingID = Orders.BookingID
 SET @id = 7;
 EXECUTE GetOrderDetail USING @id;
 
-
-
-
 DELIMITER //
 
 CREATE PROCEDURE CancelOrder(IN cancelID INT)
 BEGIN
 DELETE FROM Orders WHERE Orders.OrderID = cancelID;
-SELECT CONCAT('Order ',cancelID, ' is cancelled');
+SELECT CONCAT('Order ',cancelID, ' is cancelled') AS Confirmation;
 END //
 
 DELIMITER ;
